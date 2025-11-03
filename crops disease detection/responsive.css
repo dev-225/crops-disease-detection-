@@ -1,0 +1,18 @@
+
+main {
+padding: 1rem;
+}
+
+
+.lg\:col-span-2, 
+.lg\:col-span-1 { 
+    grid-column: span 3 / span 3; 
+}
+
+
+.telemetry-panel {
+    margin-top: 2rem;
+}
+
+
+}

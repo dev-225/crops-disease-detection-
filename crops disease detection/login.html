@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Login - AgriScout AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-green-600 mb-2">Welcome Back!</h1>
+        <p class="text-center text-gray-600 mb-8">Login to your dashboard.</p>
+
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <input type="tel" id="phone" value="+919876543210" placeholder="Enter your phone number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <input type="password" id="password" value="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" required>
+            </div>
+            
+            <div class="flex items-center mb-6">
+                <input id="showPassword" type="checkbox" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                <label for="showPassword" class="ml-2 block text-sm text-gray-700">Show Password</label>
+            </div>
+            
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-bold text-lg shadow-md transition-all">
+                Login
+            </button>
+        </form>
+
+        <p class="text-center text-gray-600 mt-6">
+            Don't have an account? <a href="register.html" class="text-green-600 hover:underline font-medium">Register here</a>
+        </p>
+        <p class="text-center text-gray-500 mt-2">
+            <a href="index.html" class="text-sm hover:underline">← Back to Home</a>
+        </p>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const showPasswordCheckbox = document.getElementById('showPassword');
+
+        showPasswordCheckbox.addEventListener('change', function() {
+            passwordInput.type = this.checked ? 'text' : 'password';
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const phone = document.getElementById('phone').value;
+            
+            const user = {
+                name: "Farmer Joe",
+                email: phone + "@farm.local", 
+                phone: phone
+            };
+            
+            // This is the correct key that main.js is looking for
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+
+</body>
+</html>

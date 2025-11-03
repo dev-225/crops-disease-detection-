@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result - AgriScout AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+
+  
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-green-600">AgriScout AI</div>
+            <div class="space-x-6 flex items-center">
+                <a href="dashboard.html" class="text-gray-600 hover:text-green-600">Dashboard</a>
+                <a href="about.html" class="text-gray-600 hover:text-green-600">About</a>
+                <button id="logoutButton" data-action="logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md transition-all">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-12">
+        <div class="bg-white p-10 rounded-xl shadow-lg max-w-4xl mx-auto">
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-4 border-gray-300">Analysis Result</h1>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+               
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Uploaded Image</h2>
+                    <img id="resultImage" src="" alt="Uploaded Crop" class="rounded-lg shadow-md w-full bg-gray-800 h-64 object-cover">
+                    <p id="timestamp" class="text-sm text-gray-500 mt-2 text-center"></p>
+                </div>
+
+           
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">AI Diagnosis</h2>
+                    
+                    <div id="resultBox" class="p-6 rounded-lg">
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-500">Disease Detected</label>
+                            <p id="disease" class="text-4xl font-bold"></p>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-500">Confidence Score</label>
+                            <p id="confidence" class="text-4xl font-bold"></p>
+                        </div>
+                    </div>
+
+                    <a href="advice.html" id="adviceButton" class="w-full text-center bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-bold text-lg shadow-md transition-all mt-6 inline-block">
+                        View Treatment & Advice
+                    </a>
+                    <a href="dashboard.html" class="w-full text-center bg-gray-800 hover:bg-gray-700 text-gray-300 p-3 rounded-lg font-medium mt-4 inline-block">
+                        Run New Analysis
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+    
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check login status
+            if (!checkLogin('prediction.html')) return;
+            
+            // Get prediction from localStorage
+            const prediction = JSON.parse(localStorage.getItem('lastPrediction'));
+            if (!prediction) {
+                alert("No prediction found. Redirecting to dashboard.");
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // Populate the fields
+            const timestamp = new Date(prediction.timestamp);
+            document.getElementById('timestamp').textContent = `Analyzed on: ${timestamp.toLocaleString()}`;
+            
+            const diseaseEl = document.getElementById('disease');
+            const confidenceEl = document.getElementById('confidence');
+            const resultBox = document.getElementById('resultBox');
+            const adviceButton = document.getElementById('adviceButton');
+
+            diseaseEl.textContent = prediction.disease;
+            confidenceEl.textContent = `${(prediction.confidence * 100).toFixed(1)}%`;
+
+            // Style the result box
+            if (prediction.disease === 'Healthy') {
+                diseaseEl.classList.add('text-green-600');
+                confidenceEl.classList.add('text-green-600');
+                resultBox.classList.add('bg-green-900', 'border', 'border-green-700');
+                adviceButton.textContent = 'View Preventive Measures';
+            } else {
+                diseaseEl.classList.add('text-red-600');
+                confidenceEl.classList.add('text-red-600');
+                resultBox.classList.add('bg-red-900', 'border', 'border-red-700');
+            }
+        });
+    </script>
+</body>
+</html>

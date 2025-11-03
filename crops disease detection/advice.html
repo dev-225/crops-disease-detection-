@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treatment Advice - AgriScout AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-green-600">AgriScout AI</div>
+            <div class="space-x-6 flex items-center">
+                <a href="dashboard.html" class="text-gray-600 hover:text-green-600">Dashboard</a>
+                <a href="about.html" class="text-gray-600 hover:text-green-600">About</a>
+                <button id="logoutButton" data-action="logout" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow-md transition-all">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-12">
+        <div class="bg-white p-10 rounded-xl shadow-lg max-w-4xl mx-auto">
+            
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Actionable Advice</h1>
+            <p class="text-xl text-gray-600 mb-6">For Disease: <span id="diseaseName" class="font-bold"></span></p>
+
+            <div id="adviceContent" class="space-y-8">
+                </div>
+
+            <a href="dashboard.html" class="w-full text-center bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-bold text-lg shadow-md transition-all mt-10 inline-block">
+                Back to Dashboard
+            </a>
+        </div>
+    </main>
+
+    <script src="main.js"></script>
+
+    <script>
+        // --- SIMULATED ADVICE DATABASE (from dashboard.js) ---
+        // This is duplicated from dashboard.js, which is fine for this demo.
+        function getManagementPlan(disease, envData = {}) {
+            let recommendation = "";
+            let measures = [];
+            let isHighRisk = disease !== "Healthy";
+
+            if (disease === "Healthy") {
+                recommendation = "Optimal health. Continue routine monitoring.";
+                measures = ["Routine canopy checks.", "Soil nutrient test (Q-30 days)."];
+                isHighRisk = false;
+            } else if (disease === "Late_Blight") {
+                recommendation = "IMMEDIATE fungicide application (Systemic recommended).";
+                if (envData.humidity > 85) {
+                    recommendation += " High humidity accelerates spread; increase ventilation.";
+                }
+                measures = ["Isolate infected plants.", "Avoid overhead irrigation.", "Improve air flow."];
+            } else if (disease === "Rust") {
+                recommendation = "Apply sulfur-based fungicide.";
+                measures = ["Prune affected leaves.", "Ensure good light exposure.", "Clean ground debris."];
+            } else if (disease === "Powdery_Mildew") {
+                recommendation = "Apply potassium bicarbonate or neem oil spray.";
+                measures = ["Increase air circulation.", "Remove infected parts.", "Ensure adequate sunlight."];
+            } else if (disease === "Early_Blight") {
+                 recommendation = "Apply a copper-based or chlorothalonil fungicide.";
+                 measures = ["Prune lower, infected leaves.", "Mulch at the base of plants.", "Practice crop rotation."];
+            } else {
+                recommendation = `Apply tailored fungicide for ${disease}. Consult regional specialist.`;
+                measures = ["Monitor moisture levels carefully.", "Maintain soil nutrient balance."];
+            }
+            
+            return { recommendation, measures, isHighRisk };
+        }
+
+
+        // --- PAGE POPULATION SCRIPT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check login status
+            if (!checkLogin('advice.html')) return;
+            
+            const prediction = JSON.parse(localStorage.getItem('lastPrediction'));
+            if (!prediction) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            // --- Populate Advice ---
+            const disease = prediction.disease;
+            // Get the plan from our local function
+            const adviceData = getManagementPlan(disease); 
+            
+            const adviceContent = document.getElementById('adviceContent');
+            
+            document.getElementById('diseaseName').textContent = disease;
+            if (disease === 'Healthy') {
+                document.getElementById('diseaseName').classList.add('text-green-600');
+            } else {
+                document.getElementById('diseaseName').classList.add('text-red-600');
+            }
+
+            let measuresHTML = adviceData.measures.map(item => `<li class="flex items-start"><span class="text-green-500 mr-2 mt-1">✔</span>${item}</li>`).join('');
+
+            adviceContent.innerHTML = `
+                <div>
+                    <h2 class="text-2xl font-bold ${disease === 'Healthy' ? 'text-green-700' : 'text-red-700'} mb-3">
+                        ${disease === 'Healthy' ? 'Preventive Plan' : 'Urgent Treatment Plan'}
+                    </h2>
+                    <p class="text-lg text-gray-700 p-4 bg-gray-800 rounded-lg">${adviceData.recommendation}</p>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-3">Management Measures</h2>
+                    <ul class="space-y-2 text-gray-600 list-inside">
+                        ${measuresHTML}
+                    </ul>
+                </div>
+            `;
+        });
+    </script>
+
+</body>
+</html>

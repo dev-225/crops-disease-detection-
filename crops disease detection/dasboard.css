@@ -1,0 +1,66 @@
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: #0d1117; 
+    color: #e5e7eb;
+    transition: background-color 0.5s;
+}
+
+
+.bg-white { 
+    background-color: #161b22; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.text-gray-900 { color: #e5e7eb; }
+.text-gray-700 { color: #9ca3af; }
+
+
+.telemetry-panel {
+    background: linear-gradient(135deg, #161b22 0%, #1e252d 100%);
+    border: 1px solid #2e3745;
+    box-shadow: 0 10px 30px rgba(0, 255, 127, 0.1); 
+}
+
+.sensor-card {
+    backdrop-filter: blur(5px);
+    background-color: rgba(22, 27, 34, 0.5); 
+    border: 1px solid #3d4a5d;
+    transition: all 0.3s ease-in-out;
+}
+
+.sensor-card:hover {
+    border-color: #10b981; /* Glowing green border on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.progress-bar-fill {
+    transition: width 1s ease-out; 
+}
+
+
+@keyframes pulse-live { 
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); } 
+}
+.animate-pulse-live { 
+    animation: pulse-live 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; 
+}
+
+
+@media (max-width: 1024px) {
+    main { 
+        padding: 1rem; 
+    }
+    
+
+    .lg\:col-span-2, 
+    .lg\:col-span-1 { 
+        grid-column: span 3 / span 3; 
+    }
+    
+    .telemetry-panel {
+        margin-top: 2rem;
+    }
+}
